@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/ilovesusu/su-gin/config"
 	"github.com/ilovesusu/su-gin/controllers"
+	"github.com/ilovesusu/su-gin/middleware"
 	"net/http"
 )
 
@@ -31,8 +32,7 @@ func InitRouter() *gin.Engine {
 
 	//需要Token
 	apiNeedToken := r.Group("/v1/api")
-	// todo Token中间件
-	//apiNeedToken.Use(middleware.TokenAuthentication())
+	apiNeedToken.Use(middleware.TokenAuthentication())
 	{
 		user := apiNeedToken.Group("/user")
 		{

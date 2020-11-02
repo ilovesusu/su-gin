@@ -8,10 +8,7 @@ import (
 )
 
 type CustomClaims struct {
-	UID uint `json:"uid"` // 用户id
-	MID uint `json:"mid"` // 商家id
-	AID uint `json:"aid"` // 总后台id
-	TID uint `json:"tid"` // 代理id
+	//添加需要参数
 	jwt.StandardClaims
 }
 
