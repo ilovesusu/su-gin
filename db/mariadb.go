@@ -1,9 +1,9 @@
-package model
+package db
 
 import (
-	"database/sql"
 	"fmt"
 	"github.com/ilovesusu/su-gin/config"
+	"github.com/ilovesusu/su-gin/model"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -13,7 +13,6 @@ import (
 )
 
 var (
-	db   *sql.DB
 	SuDB *gorm.DB
 	err  error
 )
@@ -46,5 +45,5 @@ func init() {
 	db.SetConnMaxLifetime(time.Minute * config.SuDatabase.CONN_MAX_LIFE_TIME)
 
 	//自动迁移表,AutoMigrate 会创建表，缺少的外键，约束，列和索引，并且会更改现有列的类型（如果其大小、精度、是否为空可更改）。但 不会 删除未使用的列，以保护您的数据。
-	_ = SuDB.AutoMigrate(&User{}) //用户表
+	_ = SuDB.AutoMigrate(&model.User{}) //用户表
 }

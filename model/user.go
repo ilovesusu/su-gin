@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/ilovesusu/su-gin/config"
+	"github.com/ilovesusu/su-gin/db"
 	"github.com/ilovesusu/su-gin/utils"
 	"log"
 )
@@ -27,7 +28,7 @@ type RegisterParam struct {
 }
 
 func (model *User) GetUserForID(id int) (user User, err error) {
-	find := SuDB.Where("id=?", id).Find(&user)
+	find := db.SuDB.Where("id=?", id).Find(&user)
 
 	if find.Error != nil {
 		log.Println(find.Error)
@@ -39,7 +40,7 @@ func (model *User) GetUserForID(id int) (user User, err error) {
 }
 
 func (model *User) GetUserForUserName(username string) (user User, err error) {
-	find := SuDB.Where("user_name=?", username).Find(&user)
+	find := db.SuDB.Where("user_name=?", username).Find(&user)
 
 	if find.Error != nil {
 		log.Println(find.Error)
@@ -54,7 +55,7 @@ func (model *User) CreateUser(registerparam RegisterParam) (user User, err error
 	user.UserPassword, _ = utils.SuMd5(registerparam.Password, config.SuApp.JwtSecret)
 	user.UserName = registerparam.Username
 
-	find := SuDB.Create(&user)
+	find := db.SuDB.Create(&user)
 
 	if find.Error != nil {
 		log.Println(find.Error)
