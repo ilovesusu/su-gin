@@ -10,7 +10,6 @@ type app struct {
 	VERSION   string `ini:"VERSION"`
 	PageSize  int    `ini:"PAGE_SIZE"`
 	JwtSecret string `ini:"JWT_SECRET"`
-	JwtFuck   string `ini:"JWT_FUCK"`
 	Run_Mode  string `ini:"RUN_MODE"`
 	Assets    string `ini:"ASSETS"`
 }
