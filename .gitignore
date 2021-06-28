@@ -1,3 +1,4 @@
 .idea
-config/app.ini
+configs/app.ini
 i18n.Su.*
+log

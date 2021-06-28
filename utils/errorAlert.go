@@ -2,7 +2,7 @@ package utils
 
 import (
 	"fmt"
-	"github.com/ilovesusu/su-gin/config"
+	"github.com/ilovesusu/su-gin/configs"
 	"runtime/debug"
 	"strings"
 	"time"
@@ -19,7 +19,7 @@ func ErrorMail(text string) bool {
 		DebugStack += v + "<br>"
 	}
 
-	subject := fmt.Sprintf("【系统告警】%s 项目出错了！", config.SuApp.APPNAME)
+	subject := fmt.Sprintf("【系统告警】%s 项目出错了！", configs.SuApp.APPNAME)
 
 	body := strings.ReplaceAll(MailTemplate, "{ErrorMsg}", fmt.Sprintf("%s", text))
 	body = strings.ReplaceAll(body, "{RequestTime}", time.Now().Format("2006/01/02 15:04:05"))
@@ -30,11 +30,11 @@ func ErrorMail(text string) bool {
 
 	// 执行发邮件
 	options := &Options{
-		MailHost: config.SuAlarmError.EmailHost,
-		MailPort: config.SuAlarmError.EmailPort,
-		MailUser: config.SuAlarmError.EmailUser,
-		MailPass: config.SuAlarmError.EmailPass,
-		MailTo:   config.SuAlarmError.ErrorNotifyUser,
+		MailHost: configs.SuAlarmError.EmailHost,
+		MailPort: configs.SuAlarmError.EmailPort,
+		MailUser: configs.SuAlarmError.EmailUser,
+		MailPass: configs.SuAlarmError.EmailPass,
+		MailTo:   configs.SuAlarmError.ErrorNotifyUser,
 		Subject:  subject,
 		Body:     body,
 	}

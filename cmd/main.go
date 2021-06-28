@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/ilovesusu/su-gin/config"
+	"github.com/ilovesusu/su-gin/configs"
 	"github.com/ilovesusu/su-gin/router"
 	"log"
 	"net/http"
@@ -25,7 +25,7 @@ func main() {
 	engine := router.InitRouter()
 
 	srv := &http.Server{
-		Addr:    config.SuServer.HttpIP + ":" + config.SuServer.HttpPort,
+		Addr:    configs.SuServer.HttpIP + ":" + configs.SuServer.HttpPort,
 		Handler: engine,
 	}
 	go func() {

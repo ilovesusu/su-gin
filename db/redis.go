@@ -1,8 +1,8 @@
 package db
 
 import (
-	"github.com/go-redis/redis"
-	"github.com/ilovesusu/su-gin/config"
+	"github.com/go-redis/redis/v8"
+	"github.com/ilovesusu/su-gin/configs"
 )
 
 var (
@@ -11,11 +11,10 @@ var (
 
 func init() {
 	SuRedis = redis.NewClient(&redis.Options{
-		//todo 修改端口
-		Addr:         config.SuRedis.Host + ":" + config.SuRedis.Port,
-		Password:     config.SuRedis.PassWord,
-		DB:           config.SuRedis.DatabasesName,
-		PoolSize:     config.SuRedis.POOL_SIZE,
-		MinIdleConns: config.SuRedis.MIN_IDLE_CONNS,
+		Addr:         configs.SuRedis.Host + ":" + configs.SuRedis.Port,
+		Password:     configs.SuRedis.PassWord,
+		DB:           configs.SuRedis.DatabasesName,
+		PoolSize:     configs.SuRedis.POOL_SIZE,
+		MinIdleConns: configs.SuRedis.MIN_IDLE_CONNS,
 	})
 }

@@ -3,7 +3,7 @@ package middleware
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/ilovesusu/su-gin/config"
+	"github.com/ilovesusu/su-gin/configs"
 	"github.com/ilovesusu/su-gin/utils"
 )
 
@@ -24,7 +24,7 @@ func TokenAuthentication() gin.HandlerFunc {
 				utils.ReturnJson(c, "Token验证失败"+err.Error(), 40002, nil)
 				c.Abort()
 				return
-			}  else if config.SuApp.Run_Mode == "debug" {
+			}  else if configs.SuApp.Run_Mode == "debug" {
 
 			}
 		}

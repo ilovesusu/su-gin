@@ -2,6 +2,7 @@ package utils
 
 import (
 	"fmt"
+	"github.com/ilovesusu/su-gin/configs"
 	"reflect"
 	"testing"
 	"time"
@@ -12,8 +13,7 @@ func TestSign(t *testing.T) {
 	susu.Username = "susu"
 	susu.Password = "9527"
 	susu.TimeStamp = time.Now().Unix()
-	sign := Sign(&susu, "susu", "susuwoaini")
-	fmt.Println(sign)
+	sign := Sign(&susu, "susu", configs.SuApp.JwtSecret)
 
 	susu.SecretKey = sign
 

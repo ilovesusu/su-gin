@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
+	"github.com/ilovesusu/su-gin/configs"
 	"reflect"
 	"sort"
 	"strings"
@@ -14,6 +15,11 @@ type ParamM struct {
 	Password  string `susu:"password"   form:"password"  json:"password" binding:"required"`
 	SecretKey string `susu:"-" form:"secret_key" json:"tag_value reflect.Value" binding:"required"`
 	TimeStamp int64  `susu:"time_stamp" form:"time_stamp" json:"time_stamp" binding:"required"`
+}
+
+type SignParam struct {
+	Secret    string `form:"secret" susu:"-" json:"secret" binding:"required"`
+	TimeStamp uint   `form:"time_stamp" susu:"time_stamp" json:"time_stamp" binding:"required"`
 }
 
 // 模拟微信计算签名
@@ -32,9 +38,9 @@ func Sign(a interface{}, tag string, key string) (sign string) {
 	mReq = make(map[string]interface{}, 0)
 	for j := 0; j < valueOf.NumField(); j++ {
 		tagname := typeOf.Field(j).Tag.Get(tag)
-		if tagname != "-" {
+		//fmt.Println("tagname", tagname)
+		if tagname != "-" && tagname != "" {
 			tag_value = valueOf.Field(j)
-			fmt.Println("tag_value", tag_value)
 			switch valueOf.Field(j).Kind() {
 			case reflect.Int, reflect.Int64, reflect.Int32:
 				mReq[tagname] = tag_value.Int()
@@ -42,12 +48,18 @@ func Sign(a interface{}, tag string, key string) (sign string) {
 				mReq[tagname] = tag_value.Uint()
 			case reflect.String:
 				mReq[tagname] = tag_value.String()
+			case reflect.Bool:
+				mReq[tagname] = tag_value.Bool()
 			}
+		}
+		if tagname == "" {
+			sign := valueOf.Field(j).Interface().(SignParam)
+			mReq["time_stamp"] = sign.TimeStamp
 		}
 	}
 	//STEP1, 对key进行升序排序.
 	sorted_keys := make([]string, 0)
-	for k := range mReq {
+	for k, _ := range mReq {
 		sorted_keys = append(sorted_keys, k)
 	}
 
@@ -55,7 +67,6 @@ func Sign(a interface{}, tag string, key string) (sign string) {
 	//STEP2, 对key=value的键值对用&连接起来，略过空值
 	var signStrings string
 	for _, k := range sorted_keys {
-		//fmt.Printf("k=%v, v=%v\n", k, mReq[k])
 		value := fmt.Sprintf("%v", mReq[k])
 		if value != "" {
 			signStrings = signStrings + k + "=" + value + "&"
@@ -63,11 +74,12 @@ func Sign(a interface{}, tag string, key string) (sign string) {
 	}
 
 	//STEP3, 在键值对的最后加上key=API_KEY
-	if key != "" {
-		signStrings = signStrings + "secret_key=" + key
-	}
+	//if key != "" {
+	//	signStrings = signStrings + "secret_key=" + key
+	//}
 
-	fmt.Println("signStrings", signStrings)
+	//STEP3,切除最后的&
+	signStrings = signStrings[0 : len(signStrings)-1]
 
 	//STEP4, 进行MD5签名并且将所有字符转为大写.
 	md5Ctx := md5.New()
@@ -79,9 +91,8 @@ func Sign(a interface{}, tag string, key string) (sign string) {
 }
 
 func CheckSign(a interface{}) bool {
-	var tag_value reflect.Value
-	sign := Sign(a, "susu", "susuwoaini")
-	fmt.Println("sign", sign)
+	var tag_value_sign string
+	sign := Sign(a, "susu", configs.SuApp.JwtSecret)
 	valueOf := reflect.ValueOf(a)
 	typeOf := reflect.TypeOf(a)
 	if valueOf.Kind() == reflect.Ptr {
@@ -91,14 +102,16 @@ func CheckSign(a interface{}) bool {
 
 	for j := 0; j < valueOf.NumField(); j++ {
 		tagname := typeOf.Field(j).Tag.Get("susu")
-		if tagname == "-" {
-			tag_value = valueOf.Field(j)
+		//结构体tagname为空
+		if tagname == "" {
+			sign := valueOf.Field(j).Interface().(SignParam)
+			tag_value_sign = sign.Secret
 			break
 		}
 	}
 	// 校验 sign
-	fmt.Println("tag_value", tag_value)
-	if tag_value.String() == sign {
+	//fmt.Println("tag_value_sign", tag_value_sign)
+	if tag_value_sign == sign {
 		return true
 	}
 	return false

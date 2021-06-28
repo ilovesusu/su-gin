@@ -2,10 +2,11 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/ilovesusu/su-gin/config"
-	"github.com/ilovesusu/su-gin/controllers"
+	"github.com/ilovesusu/su-gin/configs"
 	"github.com/ilovesusu/su-gin/middleware"
+	"io"
 	"net/http"
+	"os"
 )
 
 // post delete put get 对应 增 删 改 查
@@ -24,31 +25,26 @@ c.MultipartForm    示例: 处理多个文件的上传
 */
 
 func InitRouter() *gin.Engine {
-	//发行模式
-	gin.SetMode(config.SuApp.Run_Mode)
+	// 发行模式
+	gin.SetMode(configs.SuApp.Run_Mode)
+	// 如果是api则记录到文件,否则直接打印到控制台
+	if configs.SuApp.SaveLog == true {
+		f, _ := os.OpenFile(configs.SuApp.Log+"/gin_access.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		f1, _ := os.OpenFile(configs.SuApp.Log+"/gin_error.log", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666)
+		//为了方便查阅,控制台与文件同时输出(io reader writer 会增加负载)
+		gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+		gin.DefaultErrorWriter = io.MultiWriter(f1, os.Stdout)
+	}
 	r := gin.Default()
 
-	r.StaticFS("/assets", http.Dir(config.SuApp.Assets)) //静态资源
+	// 注册全局中间件
+	r.Use(middleware.PageNotFound())
+	r.Use(middleware.Cors())
 
-	//需要Token
-	apiNeedToken := r.Group("/v1/api")
-	apiNeedToken.Use(middleware.TokenAuthentication())
-	{
-		user := apiNeedToken.Group("/user")
-		{
-			user.GET("/UserGet", controllers.UserGet) //通过ID查询用户信息
-		}
-	}
+	r.StaticFS("/assets", http.Dir(configs.SuApp.Assets)) //静态资源
 
-	//无需Token
-	apiNOToken := r.Group("/v1/api")
-	{
-		user := apiNOToken.Group("/user")
-		{
-			user.GET("/Login", controllers.Login)        //登录
-			user.POST("/Register", controllers.Register) //注册
-			user.GET("/Test", controllers.Test)          //测试
-		}
-	}
+	LoadUser(r)
+	LoadAdmin(r)
+
 	return r
 }
