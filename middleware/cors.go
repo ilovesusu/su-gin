@@ -9,12 +9,12 @@ import (
 // 跨域
 func Cors() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		method := c.Request.Method               //请求方法
-		origin := c.Request.Header.Get("Origin") //请求头部
-		var headerKeys []string  =make([]string,0)     // 声明请求头keys
+		method := c.Request.Method                  //请求方法
+		origin := c.Request.Header.Get("Origin")    //请求头部
+		var headerKeys []string = make([]string, 0) // 声明请求头keys
 
-		headerKeys[0]="access-control-allow-origin"
-		headerKeys[1]="access-control-allow-headers"
+		headerKeys = append(headerKeys, "access-control-allow-headers")
+		headerKeys = append(headerKeys, "access-control-allow-origin ")
 
 		for k, _ := range c.Request.Header {
 			headerKeys = append(headerKeys, k)
