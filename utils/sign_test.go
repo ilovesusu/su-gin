@@ -13,7 +13,7 @@ func TestSign(t *testing.T) {
 	susu.Username = "susu"
 	susu.Password = "9527"
 	susu.TimeStamp = time.Now().Unix()
-	sign := Sign(&susu, "susu", configs.SuApp.JwtSecret)
+	sign := Sign(&susu, "susu", configs.SuJwt.JwtSecret)
 
 	susu.SecretKey = sign
 

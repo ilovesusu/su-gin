@@ -92,7 +92,7 @@ func Sign(a interface{}, tag string, key string) (sign string) {
 
 func CheckSign(a interface{}) bool {
 	var tag_value_sign string
-	sign := Sign(a, "susu", configs.SuApp.JwtSecret)
+	sign := Sign(a, "susu", configs.SuJwt.JwtSecret)
 	valueOf := reflect.ValueOf(a)
 	typeOf := reflect.TypeOf(a)
 	if valueOf.Kind() == reflect.Ptr {

@@ -12,7 +12,7 @@ type errorString struct {
 	s string
 }
 
-// 发邮件
+// ErrorMail 发邮件
 func ErrorMail(text string) bool {
 	DebugStack := ""
 	for _, v := range strings.Split(string(debug.Stack()), "\n") {

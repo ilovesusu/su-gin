@@ -20,11 +20,34 @@ type GlobeError struct {
 }
 
 var (
-	SUCCESS     = GlobeError{Code: 200, Msg: "Success"}
-	PARAMNOTFUND     = GlobeError{Code: 400, Msg: "PARAM_NOT_FUND"}
-	NOTFUND     = GlobeError{Code: 404, Msg: "404"}
-	SYSTEMERROR = GlobeError{Code: -1, Msg: "SYSTEM_ERROR"}
-	NOPARAMETER = GlobeError{Code: -1, Msg: "NO_PARAMETER"}
-	TOKENERROR  = GlobeError{Code: 40002, Msg: "TOKEN_ERROR"}
-	SIGNERROR   = GlobeError{Code: 40002, Msg: "SIGN_ERROR"}
+	SYSTEMERROR  = GlobeError{Code: -1, Msg: "SYSTEM_ERROR"}
+
+	SUCCESS      = GlobeError{Code: 200, Msg: "Success"}
+	PARAMNOTFUND = GlobeError{Code: 400, Msg: "PARAM_NOT_FUND"}
+	NOTFUND      = GlobeError{Code: 404, Msg: "404"}
+
+	NOPARAMETER  = GlobeError{Code: 40001, Msg: "NO_PARAMETER"}
+	SIGNERROR    = GlobeError{Code: 40002, Msg: "SIGN_ERROR"}
+	TOKENERROR   = GlobeError{Code: 40003, Msg: "TOKEN_ERROR"}
+	GORMSQLERROR =GlobeError{Code: 40100,Msg: "Gorm SQL Error"}
 )
+////添加标准错误
+//func addError() {
+//	//系统错误
+//	SuI18NList[-1] = errors.New("SYSTEM ERROR")
+//	//统一成功的前缀
+//	SuI18NList[200] = errors.New("SUCCESS:")
+//	//统一失败的前缀
+//	SuI18NList[40000] = errors.New("ERROR:")
+//	SuI18NList[40001] = errors.New("PARAMETER ERROR:")
+//	SuI18NList[40002] = errors.New("LACK TOKEN:")
+//	SuI18NList[40003] = errors.New("Token ERROR:")
+//	SuI18NList[40004] = errors.New("Sign ERROR: Verify parameter failed")
+//	SuI18NList[40100] = errors.New("Gorm SQL Error:")
+//}
+//
+////添加标准通知
+//func addNotice() {
+//	SuI18NList[50000] = errors.New("Hello SuGin!")
+//	SuI18NList[50001] = errors.New("User Create Success!")
+//}
