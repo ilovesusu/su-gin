@@ -32,9 +32,9 @@ func init() {
 	_ = db.SuDB.AutoMigrate(&User{}) //用户表
 }
 
-func (user *User) Create(registerparam RegisterParam) (msg string, err error) {
-	user.UserPassword, _ = utils.SuMd5(registerparam.Password, configs.SuApp.JwtSecret)
-	user.UserName = registerparam.Username
+func (user *User) Create(registerParam RegisterParam) (msg string, err error) {
+	user.UserPassword, _ = utils.SuMd5(registerParam.Password, configs.SuJwt.JwtSecret)
+	user.UserName = registerParam.Username
 
 	find := db.SuDB.Create(&user)
 
@@ -58,7 +58,7 @@ func (user *User) Delect() (msg string, err error) {
 	panic("implement me")
 }
 
-func (model *User) GetUserForID(id int) (msg string, err error) {
+func (model *User) GetUserForID(id int) (err error) {
 	find := db.SuDB.Where("id=?", id).Find(&model)
 
 	if find.Error != nil {
@@ -70,7 +70,7 @@ func (model *User) GetUserForID(id int) (msg string, err error) {
 	return
 }
 
-func (model *User) GetUserForUserName(username string) (msg string, err error) {
+func (model *User) GetUserForUserName(username string) (err error) {
 	find := db.SuDB.Where("user_name=?", username).Find(&model)
 
 	if find.Error != nil {
