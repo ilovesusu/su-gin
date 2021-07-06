@@ -19,7 +19,7 @@ type MerchantLog struct {
 
 func init() {
 	//自动迁移表,智慧添加缺少的字段,不会删除/更改缺少的字段
-	_ = db.SuDB.AutoMigrate(&MerchantLog{})
+	//_ = db.SuDB.AutoMigrate(&MerchantLog{})
 }
 
 func AddOperatingLog(types int, mid uint, name string, text string, ip string, area string, status string) (msg string, err error) {

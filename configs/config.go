@@ -102,7 +102,7 @@ var (
 )
 
 func init() {
-	cfg, err := ini.Load("configs/app.ini")
+	cfg, err := ini.Load("/run/media/lava/Copy of E/Go/MyCode/su-gin/configs/app.ini")
 	if err != nil {
 		panic(err)
 	}

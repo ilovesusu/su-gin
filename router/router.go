@@ -43,8 +43,9 @@ func InitRouter() *gin.Engine {
 
 	r.StaticFS("/assets", http.Dir(configs.SuApp.Assets)) //静态资源
 
-	LoadUser(r)
+	//LoadUser(r)
 	//LoadAdmin(r)
+	LoadHioshop(r)
 
 	return r
 }
